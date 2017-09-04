@@ -116,14 +116,10 @@ function initializeSession(){
         msg.appendChild(p);
         msg.appendChild(time);
 
-        // let emoji = msg.appendChild(p.appendChild(document.createElement("emoji")));
         li.appendChild(avatar);
         li.appendChild(msg);
         
 
-        //let msg = document.createElement("p");
-        //msg.textContent = event.data;
-        //msg.className = event.from.connectionId === session.connection.connectionId ? 'mine' : 'theirs';
         msgHistory.appendChild(li);
         li.scrollIntoView();
     });
