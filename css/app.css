@@ -58,11 +58,13 @@ body, html {
     margin-top: 60px;
     margin-bottom: 10px;
     font-family: 'Lato', sans-serif;
+    overflow: auto;
+    height: 92%;
 }
 
 #history li {
     padding: 0.5rem;
-    overflow: hidden;
+    /*overflow: hidden; */
     display: flex;
 }
 

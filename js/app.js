@@ -94,7 +94,8 @@ function initializeSession(){
     // recibir un mensage y agregar en el historial.
     let msgHistory = document.querySelector("#history");
     session.on('signal:msg', function(event){
-
+        let data = event.data;
+        console.log(data)
         let li = document.createElement("li");
         li.className = event.from.connectionId === session.connection.connectionId ? 'mine' : 'theirs';
         let div = document.createElement("div");
@@ -107,9 +108,9 @@ function initializeSession(){
         
         // div msg
         let p = document.createElement("p");
-        p.textContent = event.data;
+        p.textContent = data.msgText;
         let time = document.createElement("time");
-        let hora = document.createTextNode("20:18");
+        let hora = document.createTextNode(data.hora);
         time.appendChild(hora);
         let msg = div;
         msg.className = "msg";
@@ -119,7 +120,6 @@ function initializeSession(){
         li.appendChild(avatar);
         li.appendChild(msg);
         
-        //Modique
         msgHistory.appendChild(li);
         li.scrollIntoView();
     });
@@ -134,8 +134,13 @@ var msgText = document.querySelector("#msgTxt");
 //Enviar una señal una vez que el usuario ingrese datos en el formulario.
 form.addEventListener("submit", function(event){
     event.preventDefault();
-
-    session.signal({type: 'msg', data: msgTxt.value }, function(error){
+    console.log(GetCurrentHour())
+    var Data = {
+        msgText: msgTxt.value,
+        hora: GetCurrentHour()
+    }
+    
+    session.signal({type: 'msg', data: Data }, function(error){
         if (error){
             console.log("Error enviando la señal: ", error.name, error.message);
         }else {
@@ -155,3 +160,19 @@ function handleError(error){
 }
 
 
+
+function AddZero(i){
+    if(i < 10){
+        i = "0" + i;
+    }
+    return i;
+}
+
+// traer la hora actual. de la computadora
+function GetCurrentHour(){
+    let date = new Date();
+    let hora = AddZero(date.getHours());
+    let minuto = AddZero(date.getMinutes());
+    let segundo = AddZero(date.getSeconds());
+    return hora + ":" + minuto + ":" + segundo;
+}
