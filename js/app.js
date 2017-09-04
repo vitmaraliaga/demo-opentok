@@ -119,7 +119,7 @@ function initializeSession(){
         li.appendChild(avatar);
         li.appendChild(msg);
         
-
+        //Modique
         msgHistory.appendChild(li);
         li.scrollIntoView();
     });
