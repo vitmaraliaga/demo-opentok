@@ -22,10 +22,18 @@
     </div>
 
     <div id="textchat">
-        <p id="history"></p>
+        <ol id="history"></ol>
         <form>
             <input type="text" class="input" placeholder="Ingresa tu comentario aqui!" id="msgTxt">
         </form>
+    </div>
+
+    <div id="buttonholder">
+        <div id="buttons">
+            <button type="button" class="button is-info" id="start" onClick="javascript:onStartGrabacion()">Iniciar Grabación</button>
+            <button type="button" class="button is-info" id="stop" onClick="javascript:onStopGrabacion()">Parar Grabación</button>
+            <button type="button" class="button is-info" id="view" onClick="javascript:onViewGrabacion()" disabled>Ver Grabación</button>
+        </div>
     </div>
   
     <script type="text/javascript" src="./js/config.js"></script>

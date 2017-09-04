@@ -7,9 +7,12 @@ var CONFIG = {
 }
 
 var session;
+var archiveId;
 
 $(document).ready(function(){
-    
+    $("#stop").hide();
+    archiveId = null;
+
     // Revisar el archivo config.js
     if(API_KEY && TOKEN && SESSION_ID){
         
@@ -60,7 +63,9 @@ function initializeSession(){
 
                 // El publisher retorna un promesa.
                 session.publish(publisher, function(error){
-                    if(error){
+                    if(!error){
+                        screenshare();
+                    }else{
                         console.log("Se ha producido un error al publicar:", error.name, error.message)
                     }
                 });
@@ -95,7 +100,7 @@ function initializeSession(){
     let msgHistory = document.querySelector("#history");
     session.on('signal:msg', function(event){
         let data = event.data;
-        console.log(data)
+        // console.log(data)
         let li = document.createElement("li");
         li.className = event.from.connectionId === session.connection.connectionId ? 'mine' : 'theirs';
         let div = document.createElement("div");
@@ -123,8 +128,30 @@ function initializeSession(){
         msgHistory.appendChild(li);
         li.scrollIntoView();
     });
+} 
+    
+OT.registerScreenSharingExtension('chrome', 'dlcgbghloidbinffeepimoifajmjelfp', 2);
+    
+function screenshare() {
+    OT.checkScreenSharingCapability(function(response) {
+        console.log(response);
 
+        if (!response.supported || response.extensionRegistered === false) {
+            alert('This browser does not support screen sharing.');
+        } else if (response.extensionInstalled === false) {
+            alert('Please install the screen sharing extension and load your app over https.');
+        } else {
+            // Screen sharing is available. Publish the screen.
+            var screenSharingPublisher = OT.initPublisher('screen-preview', {videoSource: 'screen'});
+            session.publish(screenSharingPublisher, function(error) {
+                if (error) {
+                    alert('Could not share the screen: ' + error.message);
+                }
+            });
+        }
+    });
 }
+
 //  https://codepen.io/Varo/pen/gbZzgr
 
 // Text chat
@@ -148,9 +175,45 @@ form.addEventListener("submit", function(event){
         }
     })
 }) 
+var url = "http://127.0.0.1:8887/videos"
 
+function onStartGrabacion(){
+    console.log(">>> Start")
+    $.ajax({
+        url: url + "/archive/start",
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({"sessionId": CONFIG.sessionId}),
+        complete: function(){
+            console.log("onStartGrabacion() complete");
+        },
+        success: function(){
+            console.log("onStartGrabacion() successfully");
+        },
+        error: function(err){
+            console.log(err);
+            console.log("onStartGrabacion() error");
+        }
+    });
 
+    $("#start").hide();
+    $("#stop").show();
+}
 
+function onStopGrabacion(){
+    $.post(url + "/archive/" + archiveId + "/stop");
+    $("#stop").hide();
+    $("#start").prop("disabled", false);
+    $("#stop").show();
+}
+
+function onViewGrabacion(){
+    $("#view").prop("disabled", true);
+    window.location = url + /archive/ + archiveId + "view";
+}
+
+$("#start").show();
+$("#view").hide();
 
 //Manejador de errores
 function handleError(error){
@@ -176,3 +239,4 @@ function GetCurrentHour(){
     let segundo = AddZero(date.getSeconds());
     return hora + ":" + minuto + ":" + segundo;
 }
+
