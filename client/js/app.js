@@ -77,23 +77,23 @@ function initializeSession(){
         }
     });
 
-    session.on('streamCreated', function(event){
-
-        let subscriberOptions = {
-            insertMode: 'append',
-            width: '100%',
-            height: '100%'
-        };
-        session.subscribe(event.stream, 'div-subscriber', subscriberOptions, function(error){
-            if (error) {
-                console.log('Se ha producido un error al publicar-subscriber: ', error.name, error.message);
-              }
-        });
-    });
-
-    //evento que se lanza cuando alquien se desconecta.
-    session.on('sessionDisconnected', function(event){
-        console.log('Se ha desconectado de la sesión.', event.reason);
+    session.on({
+        streamCreated: function(event){
+            let subscriberOptions = {
+                insertMode: 'append',
+                width: '100%',
+                height: '100%'
+            };
+            session.subscribe(event.stream, 'div-subscriber', subscriberOptions, function(error){
+                if (error) {
+                    console.log('Se ha producido un error al publicar-subscriber: ', error.name, error.message);
+                  }
+            });
+        },
+        sessionDisconnected:function(event){
+            //evento que se lanza cuando alquien se desconecta.
+            console.log('Se ha desconectado de la sesión.', event.reason);
+        } 
     });
 
     // recibir un mensage y agregar en el historial.
