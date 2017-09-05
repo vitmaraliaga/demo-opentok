@@ -25,11 +25,11 @@ if (error) {
 });
 
 session.on('archiveStarted', function(event) {
-archiveID = event.id;
-console.log('ARCHIVE STARTED');
-$('.start').hide();
-$('.stop').show();
-disableForm();
+  archiveID = event.id;
+  console.log('ARCHIVE STARTED');
+  $('.start').hide();
+  $('.stop').show();
+  disableForm();
 });
 
 session.on('archiveStopped', function(event) {
@@ -41,14 +41,18 @@ enableForm();
 });
 
 $(document).ready(function() {
-$('.start').click(function (event) {
-var options = $('.archive-options').serialize();
-disableForm();
-$.post('/start', options).fail(enableForm);
-}).show();
-$('.stop').click(function(event){
-$.get('stop/' + archiveID);
-}).hide();
+  $('.start').click(function (event) {
+    var options = $('.archive-options').serialize();
+    console.log(options);
+
+    disableForm();
+    $.post('/start', options).fail(enableForm);
+
+  }).show();
+
+  $('.stop').click(function(event){
+    $.get('stop/' + archiveID);
+  }).hide();
 });
 
 

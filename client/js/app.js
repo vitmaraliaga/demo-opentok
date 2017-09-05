@@ -14,7 +14,7 @@ $(document).ready(function(){
     archiveId = null;
 
     // Revisar el archivo config.js
-    if(API_KEY && TOKEN && SESSION_ID){
+/*    if(API_KEY && TOKEN && SESSION_ID){
         
         CONFIG.apiKey=API_KEY;
         CONFIG.sessionId=SESSION_ID;
@@ -23,16 +23,17 @@ $(document).ready(function(){
         initializeSession();
 
     }else if(SAMPLE_SERVER_BASE_URL){
-    
+*/    
         $.get(SAMPLE_SERVER_BASE_URL + "/session", function(res){
-        
-            CONFIG.apiKey=res.apiKey;
-            CONFIG.sessionId=res.sessionId;
+            
+            // console.log(res)
+            CONFIG.apiKey=res.api_key;
+            CONFIG.sessionId=res.session_id;
             CONFIG.token=res.token;
 
             initializeSession();
         });
-    }
+//    }
 })
 
 
@@ -93,7 +94,20 @@ function initializeSession(){
         sessionDisconnected:function(event){
             //evento que se lanza cuando alquien se desconecta.
             console.log('Se ha desconectado de la sesión.', event.reason);
-        } 
+        },
+        archiveStarted: function(event){
+            console.log("Se esta iniciando la grabacion")
+            archiveId = event.id;
+            $('#stop').show();
+            $('#start').hide();
+        },
+        archiveStopped: function(event){
+            console.log("Se esta terminando la grabacion")
+            archiveId = event.id;
+            $('#start').hide();
+            $('#stop').hide();
+            $('#view').hide();
+        }
     });
 
     // recibir un mensage y agregar en el historial.
@@ -134,7 +148,7 @@ OT.registerScreenSharingExtension('chrome', 'dlcgbghloidbinffeepimoifajmjelfp', 
     
 function screenshare() {
     OT.checkScreenSharingCapability(function(response) {
-        console.log(response);
+        //  console.log(response);
 
         if (!response.supported || response.extensionRegistered === false) {
             alert('This browser does not support screen sharing.');
@@ -161,7 +175,7 @@ var msgText = document.querySelector("#msgTxt");
 //Enviar una señal una vez que el usuario ingrese datos en el formulario.
 form.addEventListener("submit", function(event){
     event.preventDefault();
-    console.log(GetCurrentHour())
+
     var Data = {
         msgText: msgTxt.value,
         hora: GetCurrentHour()
@@ -178,12 +192,22 @@ form.addEventListener("submit", function(event){
 var url = "http://127.0.0.1:8887/videos"
 
 function onStartGrabacion(){
+    var data = {
+        hasAudio: true,
+        hasVideo: true,
+        outputMode: "composed",
+        sessionId: CONFIG.sessionId,
+        nameGravacion: "Mi video cliente"
+    }
+
+    
+
     console.log(">>> Start")
     $.ajax({
-        url: url + "/archive/start",
+        url: SAMPLE_SERVER_BASE_URL + "/start-client",
         type: "POST",
         contentType: "application/json",
-        data: JSON.stringify({"sessionId": CONFIG.sessionId}),
+        data: JSON.stringify(data),
         complete: function(){
             console.log("onStartGrabacion() complete");
         },
@@ -195,21 +219,21 @@ function onStartGrabacion(){
             console.log("onStartGrabacion() error");
         }
     });
-
     $("#start").hide();
     $("#stop").show();
 }
 
 function onStopGrabacion(){
-    $.post(url + "/archive/" + archiveId + "/stop");
+    $.post(SAMPLE_SERVER_BASE_URL + "/stop-client/" + archiveId);
+    console.log("Se paro con exito")
     $("#stop").hide();
-    $("#start").prop("disabled", false);
+    $("#view").prop("disabled", false);
     $("#stop").show();
 }
 
 function onViewGrabacion(){
     $("#view").prop("disabled", true);
-    window.location = url + /archive/ + archiveId + "view";
+    window.location = url + /archive/ + archiveId + "/view";
 }
 
 $("#start").show();
