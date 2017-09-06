@@ -106,7 +106,7 @@ function initializeSession(){
             archiveId = event.id;
             $('#start').hide();
             $('#stop').hide();
-            $('#view').hide();
+            $('#view').show();
         }
     });
 
@@ -233,7 +233,7 @@ function onStopGrabacion(){
 
 function onViewGrabacion(){
     $("#view").prop("disabled", true);
-    window.location = url + /archive/ + archiveId + "/view";
+    window.location = SAMPLE_SERVER_BASE_URL + /archive/ + archiveId + "/view";
 }
 
 $("#start").show();

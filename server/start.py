@@ -60,44 +60,10 @@ def start():
     has_audio = 'hasAudio' in request.form.keys()
     has_video = 'hasVideo' in request.form.keys()
     output_mode = OutputModes[request.form.get('outputMode')]
-    print("Mi request")
-    print(has_audio)
-    print(has_video)
-    print(output_mode)
-    print(session.session_id)
-    print("end Mi request")
+
     archive = opentok.start_archive(session.session_id, name="Python Archiving Sanple App", 
                 has_audio=has_audio, has_video=has_video, output_mode=output_mode)
     return archive.json()
-
-# methodo funciona como web services
-@app.route('/start-client', methods=['POST'])
-def startClient():
-
-    has_audio = request.json['hasAudio']
-    has_video = request.json['hasVideo']
-    output_mode = OutputModes[request.json['outputMode']]
-    session_id = request.json['sessionId']
-    name_gravacion = request.json['nameGravacion']
-    
-    print("Mi request")
-    print(has_audio)
-    print(has_video)
-    print(output_mode)
-    print(session.session_id)
-    print(session_id)
-    print("end Mi request")
-
-    archive = opentok.start_archive(session_id, name=name_gravacion, 
-                has_audio=has_audio, has_video=has_video, output_mode=output_mode)
-    return jsonify(archive.json())
-
-@app.route('/stop-client/<archive_id>', methods=['POST'])
-def stopClient(archive_id):
-    print("STOP >>>>")
-    print(archive_id)
-    archive = opentok.stop_archive(archive_id)
-    return jsonify(archive.json())
 
 @app.route('/stop/<archive_id>')
 def stop(archive_id):
@@ -110,9 +76,14 @@ def delete(archive_id):
     return redirect(url_for('history'))
 
 
+# =====================WEB SERVICES==================
+
+
+
+
 # Mis funciones
 @app.route('/session')
-def getSession():
+def get_session():
     key = api_key
     session_id = session.session_id
     token = opentok.generate_token(session_id)
@@ -122,6 +93,37 @@ def getSession():
         session_id = session_id,
         token = token
         )
+
+# methodo funciona como web services
+@app.route('/start-client', methods=['POST'])
+def start_lient():
+
+    has_audio = request.json['hasAudio']
+    has_video = request.json['hasVideo']
+    output_mode = OutputModes[request.json['outputMode']]
+    session_id = request.json['sessionId']
+    name_gravacion = request.json['nameGravacion']
+
+    archive = opentok.start_archive(session_id, name=name_gravacion, 
+                has_audio=has_audio, has_video=has_video, output_mode=output_mode)
+    return jsonify(archive.json())
+
+@app.route('/archive/<archive_id>/view')
+def view_client(archive_id):
+    archive = opentok.get_archive(archive_id)
+    if archive.status=='available':
+        
+        return redirect(archive.url)
+    else:
+        print("El video no esta disponible")
+        return jsonify(code = 404)
+
+
+@app.route('/stop-client/<archive_id>', methods=['POST'])
+def stop_client(archive_id):
+    archive = opentok.stop_archive(archive_id)
+    return jsonify(archive.json())
+
 
 if __name__ == '__main__':
     app.debug = True
