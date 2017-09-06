@@ -1,17 +1,14 @@
 body, html {
-    /* background-color: gray; */
+    background-color:#f5f7fa;
     height: 100%;
 }
 
 .content-session{
+    /* position: absolute; */
     height: 89%;
 }
 
-.sesion-rigth{
-    display: flow-root;
-}
-
-#videos {
+#videos{
     position: relative;
     width: 70%;
     height: 100%;
@@ -20,14 +17,45 @@ body, html {
     margin-right: auto;
 }
 
+#ayudas{
+    position: relative;
+    width: 30%;
+    height: 100%;
+    float: right;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 5px;
+    display: flex;
+    flex-flow: column;
+}
+
+.tabs{
+    position: relative;
+    flex: 0 1 auto;
+}
+
+.content-tabs{
+    position: relative;
+    width: 100%;
+    flex: 1 1 auto;
+}
+
+.content-tab{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+}
+
 .content-tabs .content-tab{
-    padding: 15px;
     display: none;
 }
 
 .content-tabs .content-tab.is-active{
     display: block;
 }
+
+
+
 
 #div-subscriber {
     position: absolute;

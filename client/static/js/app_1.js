@@ -168,27 +168,27 @@ function screenshare() {
 
 //  https://codepen.io/Varo/pen/gbZzgr
 
-// Text chat
-// var form = document.querySelector("form");
-// var msgText = document.querySelector("#msgTxt");
+//Text chat
+var form = document.querySelector("#formChatText");
+var msgText = document.querySelector("#msgTxt");
 
-// //Enviar una señal una vez que el usuario ingrese datos en el formulario.
-// form.addEventListener("submit", function(event){
-//     event.preventDefault();
+//Enviar una señal una vez que el usuario ingrese datos en el formulario.
+form.addEventListener("submit", function(event){
+    event.preventDefault();
 
-//     var Data = {
-//         msgText: msgTxt.value,
-//         hora: GetCurrentHour()
-//     }
+    var Data = {
+        msgText: msgTxt.value,
+        hora: GetCurrentHour()
+    }
     
-//     session.signal({type: 'msg', data: Data }, function(error){
-//         if (error){
-//             console.log("Error enviando la señal: ", error.name, error.message);
-//         }else {
-//             msgText.value = "";
-//         }
-//     })
-// }) 
+    session.signal({type: 'msg', data: Data }, function(error){
+        if (error){
+            console.log("Error enviando la señal: ", error.name, error.message);
+        }else {
+            msgText.value = "";
+        }
+    })
+}) 
 
 function onStartGrabacion(){
     var data = {
