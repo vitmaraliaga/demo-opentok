@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Demo OpenTok By Proesad.</title>
-    <link rel="stylesheet" href="./css/app.css">
-    <link rel="stylesheet" href="./css/archiving.css">
-    <script src="https://static.opentok.com/v2/js/opentok.min.js"></script>
+    <!-- <link rel="stylesheet" href="./static/css/app.css"> -->
+    <!-- <link rel="stylesheet" href="./static/css/archiving.css"> -->
+    <!-- <script src="https://static.opentok.com/v2/js/opentok.min.js"></script> -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
     <!--mis css-->
@@ -16,30 +16,118 @@
 </head>
 <body>
 
-
-
-    <!--<h1 class="title">Hola Vitmar</h1>-->
-    <div id="videos">
-        <div id="div-publisher"></div>
-        <div id="div-subscriber"></div>
-        <div id="buttonholder">
-            <div id="buttons">
-                <button type="button" class="button is-danger" id="start" onClick="javascript:onStartGrabacion()">Iniciar Grabación</button>
-                <button type="button" class="button is-success" id="stop" onClick="javascript:onStopGrabacion()">Parar Grabación</button>
-                <button type="button" class="button is-info" id="view" onClick="javascript:onViewGrabacion()" disabled>Ver Grabación</button>
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <a href="#" class="navbar-item" >
+                <img src="./static/img/proesad-opentok.png" alt="Bulma: a modern CSS framework based on Flexbox" width="112" height="28">
+                <!-- <img src="./static/img/proesad-logo.png" alt="Bulma: a modern CSS framework based on Flexbox" width="112" height="28"> -->
+                <!-- <img src="./static/img/logo-proesad.png" alt="Bulma: a modern CSS framework based on Flexbox" width="112" height="28"> -->
+            </a>
+            <a class="navbar-item is-hidden-desktop" href="#" target="_blank">
+                <span class="icon" style="color: #333;">
+                  <i class="fa fa-github"></i>
+                </span>
+            </a>
+            <a class="navbar-item is-hidden-desktop" href="#" target="_blank">
+                <span class="icon" style="color: #55acee;">
+                  <i class="fa fa-twitter"></i>
+                </span>
+            </a>
+            <div class="navbar-burger">
+                <span></span>
+                <span></span>
+                <span></span>
             </div>
         </div>
-    </div>
-
-    <div id="textchat">
-        <ol id="history"></ol>
-        <form>
-            <input type="text" class="input" placeholder="Ingresa tu comentario aqui!" id="msgTxt">
-        </form>
-    </div>
-
+        <div class="navbar-menu">
+            <!-- <h1>Mi menú</h1> -->
+        </div>
+    </nav>
   
-    <script type="text/javascript" src="./js/config.js"></script>
-    <script type="text/javascript" src="./js/app.js"></script>
+    <section class="hero is-medium is-light is-bold">
+        <div class="hero-body">
+            <div class="container">
+                <p class="title">
+                    Opentok Proesad.
+                </p>
+                <p class="subtitle">
+                    Inicie una video conferencia con <strong>OpenTook proesad</strong>
+                    de manera simple y sencilla.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="hero">
+        <div class="hero-body">
+            <div class="container is-fluid">
+                <!-- <div class="notification"> -->
+                    <!-- <p class="field has-text-centered" > -->
+                    <p class="field has-text-centered" >
+                        <a class="button is-large is-info" href="#" id="btnNewSession">
+                            <span class="icon is-medium">
+                                <i class="fa fa-check"></i>
+                            </span>
+                            <span>Crear Sessión</span>
+                        </a>
+                        <a class="button is-large is-success">
+                            <span class="icon is-medium">
+                                <i class="fa fa-github"></i>
+                            </span>
+                            <span>Unirse a una sessión</span>
+                        </a>
+                        <a class="button is-large is-light">
+                            <span class="icon is-medium">
+                                <i class="fa fa-github"></i>
+                            </span>
+                            <span>Lista de Gravaciónes</span>
+                        </a>
+                    </p>
+                    <!-- </div> -->
+            </div>
+        </div>
+    </section>
+
+    <!-- modal -->
+    <div class="modal" id="modalNewSession">
+        <div class="modal-background" id="backgroundNewSession"></div>
+        <div class="modal-content">
+            <div class="modal-card">
+                <!-- <header class="modal-card-head">
+                    <p class="modal-card-title">Modal title</p>
+                    <button class="delete" aria-label="close"></button>
+                </header> -->
+                <section class="modal-card-body">
+                        <div class="field has-addons">
+                                <!-- <label class="label is-small">Nombre de la grabación</label> -->
+                                <div class="control is-expanded has-icons-left has-icons-right">
+                                    <input id="nombreSession" class="input" type="text" minlength="5" placeholder="Ingrese el nombre de la sesión">
+                                    <span class="icon is-small is-left">
+                                        <i class="fa fa-envelope"></i>
+                                    </span>
+                                    <!-- <span class="icon is-small is-right">
+                                        <i class="fa fa-check"></i>
+                                    </span> -->
+                                    <!-- <p class="help">El nombre debe contener mas 5 palabras</p> -->
+                                </div>
+                                <div class="control">
+                                    <a class="button is-info" href="#" id="aIniciarSession">
+                                        Iniciar
+                                    </a>
+                                </div>
+                        </div>
+                </section>
+                <!-- <footer class="modal-card-foot">
+                    <button class="button is-success">Save changes</button>
+                    <button class="button">Cancel</button>
+                </footer> -->
+            </div>
+        </div>
+        <button class="modal-close is-large" aria-label="close" id="btnCloseNewSession" ></button>
+    </div>
+    
+    <script type="text/javascript" src="./static/js/index.js"></script>
+    <!-- <script type="text/javascript" src="./static/js/config.js"></script> -->
+    <!-- <script type="text/javascript" src="./js/app.js"></script> -->
 </body>
 </html>

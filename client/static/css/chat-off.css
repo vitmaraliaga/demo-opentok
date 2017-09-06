@@ -1,0 +1,26 @@
+.historial{
+    list-style: none;
+    background: none;
+    margin: 0;
+    padding: 0 0 50px 0;
+    margin-top: 60px;
+    margin-bottom: 10px;
+    font-family: 'Lato', sans-serif;
+    overflow: auto;
+    height: 100%;
+}
+
+.chat-form{
+    /* position: relative;
+    width: 30%;
+    float: right;
+    right: 0;
+    height: 100%; */
+}
+/* 
+input#msgTxt {
+    height: 40px;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+} */

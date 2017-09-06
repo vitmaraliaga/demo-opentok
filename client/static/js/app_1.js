@@ -169,27 +169,26 @@ function screenshare() {
 //  https://codepen.io/Varo/pen/gbZzgr
 
 // Text chat
-var form = document.querySelector("form");
-var msgText = document.querySelector("#msgTxt");
+// var form = document.querySelector("form");
+// var msgText = document.querySelector("#msgTxt");
 
-//Enviar una señal una vez que el usuario ingrese datos en el formulario.
-form.addEventListener("submit", function(event){
-    event.preventDefault();
+// //Enviar una señal una vez que el usuario ingrese datos en el formulario.
+// form.addEventListener("submit", function(event){
+//     event.preventDefault();
 
-    var Data = {
-        msgText: msgTxt.value,
-        hora: GetCurrentHour()
-    }
+//     var Data = {
+//         msgText: msgTxt.value,
+//         hora: GetCurrentHour()
+//     }
     
-    session.signal({type: 'msg', data: Data }, function(error){
-        if (error){
-            console.log("Error enviando la señal: ", error.name, error.message);
-        }else {
-            msgText.value = "";
-        }
-    })
-}) 
-var url = "http://127.0.0.1:8887/videos"
+//     session.signal({type: 'msg', data: Data }, function(error){
+//         if (error){
+//             console.log("Error enviando la señal: ", error.name, error.message);
+//         }else {
+//             msgText.value = "";
+//         }
+//     })
+// }) 
 
 function onStartGrabacion(){
     var data = {
@@ -264,3 +263,13 @@ function GetCurrentHour(){
     return hora + ":" + minuto + ":" + segundo;
 }
 
+
+
+$(".tabs ul").on("click", "li", function(){
+    var ContentId = $(this).data("content-id");
+    $(".tabs li").removeClass("is-active");
+    $(this).addClass("is-active");
+    $(".content-tabs>.content-tab").removeClass("is-active");
+    $("#" + ContentId).addClass("is-active");
+
+})
