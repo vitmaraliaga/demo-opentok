@@ -6,13 +6,18 @@ var CONFIG = {
     token: ""
 }
 
+// localStorage.setItem("nombre_session", nombreSession);
+
 var session;
 var archiveId;
 
 $(document).ready(function(){
     $("#stop").hide();
     archiveId = null;
+    
+    
 
+    
     // Revisar el archivo config.js
 /*    if(API_KEY && TOKEN && SESSION_ID){
         
@@ -33,6 +38,8 @@ $(document).ready(function(){
 
             initializeSession();
         });
+
+        
 //    }
 })
 
@@ -40,6 +47,12 @@ $(document).ready(function(){
 
 // Funcion de inicializaciòn
 function initializeSession(){
+
+
+    var nombre_session = localStorage.getItem("nombre_session")
+    $("#nombre_session").text(nombre_session);
+    $("#session_id").text(CONFIG.sessionId);
+
     
     session = OT.initSession(CONFIG.apiKey, CONFIG.sessionId);
     
