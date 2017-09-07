@@ -2,15 +2,31 @@
 from flask import request, redirect, jsonify, make_response
 from basic_app import api_key, api_secret, session, opentok
 from main import app
+from opentok import OpenTok, MediaModes, OutputModes
 
 
 # https://pypi.python.org/pypi/Flask-Cors
 from flask_cors import CORS, cross_origin
 cors = CORS(app)
 
+@app.route('/session', methods=['POST'])
+def create_session():
+
+    opentok = OpenTok(api_key, api_secret)
+    session = opentok.create_session(media_mode=MediaModes.routed)
+    session_id = session.session_id
+    token = opentok.generate_token(session_id)
+    session_name = request.json['session_name']
+
+    return jsonify(
+        api_key = api_key,
+        session_id = session_id,
+        token = token,
+        session_name = session_name
+    )
 
 # Mis funciones
-@app.route('/session')
+@app.route('/session', methods=['GET'])
 def get_session():
     key = api_key
     session_id = session.session_id
