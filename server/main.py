@@ -1,23 +1,18 @@
-from opentok import OpenTok, MediaModes
+from flask import Flask
 
-opentok = OpenTok(api_key, api_secret)
+# Local imports
+from config.config import app_config
 
-session = opentok.create_session(media_mode=MediaModes.routed)
+# try:
+#     config_name = os.environ['FLASK_CONFIG']
+# except Exception:
+#     raise Exception('Debe definir varibles de entorno FLASK_CONFIG ej: export FLASK_CONFIG=development')
 
-session = opentok.create_session(location=u'12.34.56.78')
+config_name = "development"
+# app = Flask(__name__, instance_relative_config=True)
+app = Flask(__name__)
+app.config.from_object(app_config[config_name])
+# app.config.from_pyfile('config.py')
 
-session = opentok.create_session(media_mode=MediaModes.routed, archive_mode=ArchiveModes.always)
-
-session_id = session.session_id
-
-token = opentok.generate_token(session_id)
-
-token = session.generate_token()
-
-from opentok import Roles
-
-token = session.generate_token(role=Roles.moderator,
-                                    expire_time = int(time.time()) + 10,
-                                    data = u'name=Johnny',
-                                    initial_layout_class_list=[u'focus'])
-                        
+from app.web_service import *
+from app.basic_app import *

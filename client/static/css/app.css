@@ -32,6 +32,7 @@ body, html {
 .tabs{
     position: relative;
     flex: 0 1 auto;
+    margin-bottom: 1px !important;
 }
 
 .content-tabs{

@@ -6,8 +6,6 @@ var CONFIG = {
     token: ""
 }
 
-// localStorage.setItem("nombre_session", nombreSession);
-
 var session;
 var archiveId;
 
@@ -41,7 +39,7 @@ $(document).ready(function(){
 
         
 //    }
-})
+});
 
 
 
@@ -51,7 +49,7 @@ function initializeSession(){
 
     var nombre_session = localStorage.getItem("nombre_session")
     $("#nombre_session").text(nombre_session);
-    $("#session_id").text(CONFIG.sessionId);
+    $("#session_id").val(CONFIG.sessionId);
 
     
     session = OT.initSession(CONFIG.apiKey, CONFIG.sessionId);
@@ -127,14 +125,17 @@ function initializeSession(){
     let msgHistory = document.querySelector("#history");
     session.on('signal:msg', function(event){
         let data = event.data;
-        // console.log(data)
+        
+
         let li = document.createElement("li");
         li.className = event.from.connectionId === session.connection.connectionId ? 'mine' : 'theirs';
         let div = document.createElement("div");
+        let div1 = document.createElement("div");
         
         // div avatar
         let img = document.createElement("img");
-        let avatar = div;
+        img.src = "http://bulma.io/images/placeholders/128x128.png";
+        let avatar = div1;
         avatar.className = "avatar";
         avatar.appendChild(img);
         
@@ -189,6 +190,10 @@ var msgText = document.querySelector("#msgTxt");
 form.addEventListener("submit", function(event){
     event.preventDefault();
 
+    if(msgTxt.value == ""){
+        return;
+    }
+
     var Data = {
         msgText: msgTxt.value,
         hora: GetCurrentHour()
@@ -204,17 +209,16 @@ form.addEventListener("submit", function(event){
 }) 
 
 function onStartGrabacion(){
+    let nombreGrabacion = $("#nombre_session").text();
+
     var data = {
         hasAudio: true,
         hasVideo: true,
         outputMode: "composed",
         sessionId: CONFIG.sessionId,
-        nameGravacion: "Mi video cliente"
+        nameGravacion: nombreGrabacion
     }
 
-    
-
-    console.log(">>> Start")
     $.ajax({
         url: SAMPLE_SERVER_BASE_URL + "/start-client",
         type: "POST",

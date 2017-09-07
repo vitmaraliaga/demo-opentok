@@ -1,1 +1,4 @@
 server/venv/
+.idea
+*.pyc
+*/__pycache__
