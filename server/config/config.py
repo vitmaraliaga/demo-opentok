@@ -27,3 +27,8 @@ app_config = {
     'development': DevelopmentConfig,
     'production': ProductionConfig
 }
+
+from common import Credenciales
+
+api_key = Credenciales().getApiKey()
+api_secret = Credenciales().getApiSecret()

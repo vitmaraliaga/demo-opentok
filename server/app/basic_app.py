@@ -4,15 +4,19 @@ from email.utils import formatdate
 import os, time
 from main import app
 
+from ..config.config import api_key, api_secret
 
-try:
-    api_key = os.environ['API_KEY']
-    api_secret = os.environ['API_SECRET']
-except Exception:
-    raise Exception('Debe definir variables de entorno API_KEY y API_SECRET')
 
-opentok = OpenTok(api_key, api_secret)
-session = opentok.create_session(media_mode=MediaModes.routed)
+# try:
+#     api_key = os.environ['API_KEY']
+#     api_secret = os.environ['API_SECRET']
+# except Exception:
+#     raise Exception('Debe definir variables de entorno API_KEY y API_SECRET')
+# print(ReadJson())
+
+
+# opentok = OpenTok(api_key, api_secret)
+# session = opentok.create_session(media_mode=MediaModes.routed)
 
 
 @app.template_filter ('datefmt')

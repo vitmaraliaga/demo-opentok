@@ -50,7 +50,6 @@ function initializeSession(){
     var nombre_session = localStorage.getItem("nombre_session")
     $("#nombre_session").text(nombre_session);
     $("#session_id").val(CONFIG.sessionId);
-
     
     session = OT.initSession(CONFIG.apiKey, CONFIG.sessionId);
     

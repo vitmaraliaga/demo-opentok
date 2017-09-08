@@ -1,13 +1,16 @@
 # =====================WEB SERVICES==================
 from flask import request, redirect, jsonify, make_response
-from basic_app import api_key, api_secret, session, opentok
+# from basic_app import api_key, api_secret, session, opentok
 from main import app
-from opentok import OpenTok, MediaModes, OutputModes
+from opentok import OpenTok, MediaModes, OutputModes, Roles
 
 
 # https://pypi.python.org/pypi/Flask-Cors
 from flask_cors import CORS, cross_origin
 cors = CORS(app)
+
+# Variables Generales
+from ..config.config import api_key, api_secret
 
 @app.route('/session', methods=['POST'])
 def create_session():
@@ -15,14 +18,29 @@ def create_session():
     opentok = OpenTok(api_key, api_secret)
     session = opentok.create_session(media_mode=MediaModes.routed)
     session_id = session.session_id
-    token = opentok.generate_token(session_id)
-    session_name = request.json['session_name']
+
+    # token = session.generate_token(
+    #     role=Roles.moderator,
+    #     expire_time=int(time.time() + 10),
+    #     data=u'name=Vitmar',
+    #     initial_layout_class_list=[u'focus']
+    # )
+
+    # session_name = request.jskon['session_name']
+
+    return jsonify(
+        api_key = api_key,
+        session_id = session_id
+    )
+
+@app.route('/session/<session_id>/token')
+def create_token(session_id):
+    token =  opentok.generate_token(session_id)
 
     return jsonify(
         api_key = api_key,
         session_id = session_id,
-        token = token,
-        session_name = session_name
+        token = token
     )
 
 # Mis funciones
