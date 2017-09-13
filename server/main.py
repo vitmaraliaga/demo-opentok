@@ -1,7 +1,7 @@
 from flask import Flask
 
 # Local imports
-from config.config import app_config
+from config.config_env import app_config
 
 # try:
 #     config_name = os.environ['FLASK_CONFIG']

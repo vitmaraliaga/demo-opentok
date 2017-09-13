@@ -1,23 +1,23 @@
 # =====================WEB SERVICES==================
 from flask import request, redirect, jsonify, make_response
-# from basic_app import api_key, api_secret, session, opentok
 from main import app
 from opentok import OpenTok, MediaModes, OutputModes, Roles
 
+# Variables Generales.
+from config.config_env import api_key, api_secret
 
 # https://pypi.python.org/pypi/Flask-Cors
 from flask_cors import CORS, cross_origin
 cors = CORS(app)
 
-# Variables Generales
-from ..config.config import api_key, api_secret
+opentok = OpenTok(api_key, api_secret)
 
 @app.route('/session', methods=['POST'])
 def create_session():
 
-    opentok = OpenTok(api_key, api_secret)
     session = opentok.create_session(media_mode=MediaModes.routed)
     session_id = session.session_id
+    session_name = request.json['session_name']
 
     # token = session.generate_token(
     #     role=Roles.moderator,
@@ -30,7 +30,8 @@ def create_session():
 
     return jsonify(
         api_key = api_key,
-        session_id = session_id
+        session_id = session_id,
+        session_name = session_name
     )
 
 @app.route('/session/<session_id>/token')
@@ -38,12 +39,13 @@ def create_token(session_id):
     token =  opentok.generate_token(session_id)
 
     return jsonify(
-        api_key = api_key,
+        # api_key = api_key,
         session_id = session_id,
         token = token
     )
 
 # Mis funciones
+"""
 @app.route('/session', methods=['GET'])
 def get_session():
     key = api_key
@@ -55,6 +57,7 @@ def get_session():
         session_id = session_id,
         token = token
         )
+"""
 
 # methodo funciona como web services
 @app.route('/start-client', methods=['POST'])

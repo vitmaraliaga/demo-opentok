@@ -4,7 +4,7 @@ from email.utils import formatdate
 import os, time
 from main import app
 
-from ..config.config import api_key, api_secret
+from config.config_env import api_key, api_secret
 
 
 # try:

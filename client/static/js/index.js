@@ -21,6 +21,15 @@ $(document).ready(function(){
                 session_name: session_name
             }
             
+            $.get(SAMPLE_SERVER_BASE_URL + "/session", function(res){
+                
+                CONFIG.apiKey=res.api_key;
+                CONFIG.sessionId=res.session_id;
+                // CONFIG.token=res.token;
+    
+                initializeSession();
+            });
+
             $.ajax({
                 url: SAMPLE_SERVER_BASE_URL + "/session",
                 type: "POST",
@@ -34,7 +43,14 @@ $(document).ready(function(){
                     console.log(data);
                     console.log("Create successfully");
                     
-                    localStorage.setItem("datosSession", JSON.stringify(data));
+                    let sessionData = {
+                        api_key: data.api_key,
+                        session_id: data.session_id,
+                        session_name: data.session_name,
+                        token: '',
+                    }
+
+                    localStorage.setItem("datosSession", JSON.stringify(sessionData));
                 },
                 error: function(err){
                     console.log(err);

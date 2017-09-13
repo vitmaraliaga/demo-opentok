@@ -1,63 +1,100 @@
-var session_data;
-
-var session;
 
 $(document).ready(function(){
-    $("#stop").hide();
-
-    session_data = JSON.parse(localStorage.getItem("datosSession"));
-
-    if(session_data){
-        initializeSession();
-
-        $("#nombre_session").text(session_data.session_name);
-        $("#session_id").val(session_data.session_id);
-    }
+    init();  
 });
 
-/**
- * Función de Inicialización
- */
-function initializeSession(){
+var setEscucharEventos = function(session){
+    session.on('streamCreated', function (event) {
 
-    session = OT.initSession(session_data.api_key, session_data.session_id)
+    });
+    session.on('streamDestroyed', function () {
 
-    session.connect(session_data.token, function(error){
-        if(!error){
-            
-            let publisherOptions = {
-                insertMode: 'append',
-                width: '100%',
-                height: '100%'
-            };
-            
-            let publisher = OT.initPublisher('div-publisher', publisherOptions, function(error){
-                if(error){
-                    console.log("Se ha producido un error al inicializar el editor:", error.name, error.message)
-                    return;
-                }
-                session.publish(publisher, function(error){
-                    if(!error){
-                        console.log("Se publico! con exito");
-                        //screenshare();
-                    }else{
-                        console.log("Se ha producido un error al publicar:", error.name, error.message)
-                    }
-                });
-            });
-            
-        }else{
-            console.log("Se produjo un error al conectarse a la sesión:", error.name, error.message)
+    });
+    session.on('signal:broadcast', function (event) {
+        if (event.data === 'status') {
+            // signal(session, broadcast.status, event.from);
         }
     });
-
-    session.on({
-        streamCreated: function(event){
-            console.log("se creo un stream")
-        },
-        sessionDisconnected:function(event){
-            console.log('Se ha desconectado de la sesión.', event.reason);
-        },
-    })
-
 }
+
+// var checkBroadcastStatus = function(session){
+    
+// }
+
+let insertOptions = {
+    width: '100%',
+    height: '100%',
+    showControls: false
+};
+
+var initPublisher = function(){
+    var properties = Object.assign({ name: 'Host', insertMode: 'before' }, insertOptions);
+    return OT.initPublisher('div-publisher', properties);
+}
+
+var getCredenciales = function(){
+    $("#stop").hide();
+    
+    let session_data = JSON.parse(localStorage.getItem("datosSession"));
+    if(!session_data.token){
+        //CrearToken
+        $.ajax({
+            url: SAMPLE_SERVER_BASE_URL+'/session/'+session_data.session_id+'/token',
+            async: false
+        }).done(function(data){
+            session_data.token=data.token;            
+        })
+    }
+
+    $("#nombre_session").text(session_data.session_name);
+    $("#session_id").val(session_data.session_id);
+
+    return session_data;
+}
+
+var setPublicarYSuscribir = function(session, publisher){
+    session.publish(publisher);
+    addPublisherControls(publisher);
+    setEscucharEventos(session, publisher);
+}
+
+var addPublisherControls = function (publisher) {
+    var publisherContainer = document.getElementById(publisher.element.id);
+    var el = document.createElement('div');
+    var controls = [
+      '<div class="publisher-controls-container">',
+      '<div id="publishVideo" class="control video-control"></div>',
+      '<div id="publishAudio" class="control audio-control"></div>',
+      '</div>',
+    ].join('\n');
+    el.innerHTML = controls;
+    publisherContainer.appendChild(el.firstChild);
+};
+
+var init = function(){
+    let credenciales = getCredenciales();
+    let props = { connectionEventsSuppressed: true };
+    let session = OT.initSession(credenciales.api_key, credenciales.session_id, props);
+    let publisher = initPublisher();
+
+    console.log(credenciales);
+
+    session.connect(credenciales.token, function (error) {
+        if (error) {
+            console.log("Se produjo un error al conectarse a la sesión:", error.name, error.message)
+        } else {
+            setPublicarYSuscribir(session, publisher);
+            //setEscucharEventos(session);
+            // checkBroadcastStatus(session);
+        }
+    });
+}
+
+$(".tabs ul").on("click", "li", function(){
+    var ContentId = $(this).data("content-id");
+    $(".tabs li").removeClass("is-active");
+    $(this).addClass("is-active");
+    $(".content-tabs>.content-tab").removeClass("is-active");
+    $("#" + ContentId).addClass("is-active");
+
+})
