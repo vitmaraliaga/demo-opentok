@@ -37,11 +37,14 @@ def create_session():
 @app.route('/session/<session_id>/token')
 def create_token(session_id):
     token =  opentok.generate_token(session_id)
+    username = "@vitmaraliaga"
 
     return jsonify(
-        # api_key = api_key,
+        api_key = api_key,
+        
         session_id = session_id,
-        token = token
+        token = token,
+        username = username
     )
 
 # Mis funciones

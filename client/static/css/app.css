@@ -78,3 +78,9 @@ body, html {
     border: 3px solid white;
     border-radius: 3px;
 }
+
+#div-subscriber.wrap {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}

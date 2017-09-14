@@ -70,7 +70,7 @@
                             </span>
                             <span>Crear Sessión</span>
                         </a>
-                        <a class="button is-large is-success">
+                        <a class="button is-large is-primary" href="#" id="btnJoinSession">
                             <span class="icon is-medium">
                                 <i class="fa fa-github"></i>
                             </span>
@@ -125,6 +125,44 @@
         </div>
         <button class="modal-close is-large" aria-label="close" id="btnCloseNewSession" ></button>
     </div>
+
+    <!-- modal for join -->
+    <div class="modal" id="modalJoinSession">
+        <div class="modal-background" id="backgroundJoinSession"></div>
+        <div class="modal-content">
+        <div class="modal-card">
+            <section class="modal-card-body">
+                <form id="formJoinSession">
+
+                    <div class="field">
+                        <label class="label">Sesion_ID:</label>
+                        <div class="control">
+                            <input class="input" name="session_id" type="text" placeholder="Ingrese le id de la sesion de la sesión">
+                        </div>
+                    </div>
+                    
+                    <!-- <div class="control is-expanded has-icons-left has-icons-right">
+                        <input id="nombreSession" class="input" type="text" minlength="5" placeholder="Ingrese el nombre de la sesión">
+                        <span class="icon is-small is-left">
+                            <i class="fa fa-envelope"></i>
+                        </span>
+                    </div> -->
+                    <div class="field is-grouped">
+                        <div class="control">
+                            <button class="button is-primary" type="submit">
+                                Unirse
+                            </button>
+                        </div>
+                        <div class="control">
+                            <button class="button is-link">Cancel</button>
+                        </div>
+                    </div>
+                </form>
+            </section>
+        </div>                        
+    </div>
+    <button class="modal-close is-large" aria-label="close" id="btnCloseJoinSession"></button>
+</div>
     
     <script type="text/javascript" src="./static/js/config.js"></script>
     <script type="text/javascript" src="./static/js/index.js"></script>

@@ -11,6 +11,20 @@ $(document).ready(function(){
     $("#btnCloseNewSession").on("click", function(){
         $("#modalNewSession").removeClass("is-active");
     });
+
+    // join session
+    $("#btnJoinSession").on("click", function(){
+        $("#modalJoinSession").addClass("is-active");
+    })
+    
+    $("#backgroundJoinSession").on("click", function(){
+        $("#modalJoinSession").removeClass("is-active");
+    });
+    
+    $("#btnCloseJoinSession").on("click", function(){
+        $("#modalJoinSession").removeClass("is-active");
+    });
+
     
     $("#aIniciarSession").on("click", function(){
         let session_name = $("#nombreSession").val();
@@ -21,14 +35,14 @@ $(document).ready(function(){
                 session_name: session_name
             }
             
-            $.get(SAMPLE_SERVER_BASE_URL + "/session", function(res){
+            // $.get(SAMPLE_SERVER_BASE_URL + "/session", function(res){
                 
-                CONFIG.apiKey=res.api_key;
-                CONFIG.sessionId=res.session_id;
-                // CONFIG.token=res.token;
+            //     CONFIG.apiKey=res.api_key;
+            //     CONFIG.sessionId=res.session_id;
+            //     // CONFIG.token=res.token;
     
-                initializeSession();
-            });
+            //     initializeSession();
+            // });
 
             $.ajax({
                 url: SAMPLE_SERVER_BASE_URL + "/session",
@@ -48,6 +62,7 @@ $(document).ready(function(){
                         session_id: data.session_id,
                         session_name: data.session_name,
                         token: '',
+                        username: '',
                     }
 
                     localStorage.setItem("datosSession", JSON.stringify(sessionData));
@@ -59,6 +74,46 @@ $(document).ready(function(){
             });
         }
     });
+
+    $("#formJoinSession").on("submit", function(e){
+        e.preventDefault();
+        let form = getFormData($(this));
+
+        console.log(form.session_id);
+
+        $.ajax({
+            url: SAMPLE_SERVER_BASE_URL+'/session/'+form.session_id+'/token',
+            async: false
+        }).done(function(data){
+            // session_data.token=data.token;
+            // session_data.username=data.username;
+
+            // datos de session de un invitado.
+            let sessionData = {
+                api_key: data.api_key,
+                session_id: form.session_id,
+                session_name: "___",
+                token: data.token,
+                username: data.username,
+            }
+
+            localStorage.setItem("datosSession", JSON.stringify(sessionData));      
+        }).always(function(){
+            window.location.href = "./templates/join_session.html";
+        });
+        
+
+    });
+
+
+    var getFormData = function($form){
+        let indexed_array = {};
+        $.map($form.serializeArray(), function(n, i){
+            indexed_array[n['name']] = n['value'];
+        });
+        return indexed_array;
+    }
+
 });
     
     
