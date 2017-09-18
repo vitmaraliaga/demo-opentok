@@ -70,17 +70,84 @@ body, html {
 
 #div-publisher {
     position: absolute;
-    width: 310px;
-    height: 190px;
+    width: 100%;
+    height: 240px;
     bottom: 10px;
-    left: 10px;
+    border: 10px;
+    /* right: 10px; */
     z-index: 100;
     border: 3px solid white;
     border-radius: 3px;
+    display: flex
 }
 
 #div-subscriber.wrap {
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
+}
+
+
+
+
+/* .rtmp-container {
+    width: 675px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+} */
+
+.rtmp-container span {
+    /* font-family: "Poiret One"; */
+    /* font-style: italic; */
+    color: #0099cc;
+    /* font-weight: 600; */
+    display: inline-block;
+    height: 25px;
+}
+
+.rtmp-container span.active {
+    color: #59c9e3;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+}
+
+.rtmp-container span.error {
+    color: red;
+    font-weight: 800;
+}
+
+.rtmp-container .input-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+}
+
+.rtmp-container .input-container input {
+    height: 35px;
+    width: 45%;
+    font-size: 14px;
+    padding: 0 10px;
+    margin: 5px 0;
+    text-align: center;
+}
+
+.rtmp-container input::-webkit-input-placeholder {
+    color: lightgrey;
+}
+
+
+
+.hidden {
+    display: none !important;
+}
+
+.opacity-0 {
+    opacity: 0;
+    z-index: -1;
+}
+
+.no-show {
+    height: 0;
 }

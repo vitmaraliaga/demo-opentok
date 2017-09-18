@@ -18,21 +18,21 @@ let insertOptions = {
  * Subscribe to a stream
  */
 var subscribe = function(session, stream){
-    var properties = Object.assign({ name: 'Invitado', insertMode: 'after' }, insertOptions);
+    var properties = Object.assign({ name: 'Guesttt!!', insertMode: 'append' }, insertOptions);
     console.log("heyyy")
     // hostDivider
-    session.subscribe(stream, 'div-subscriber', properties, function (error) {
+    session.subscribe(stream, 'div-publisher', properties, function (error) {
       if (error) {
         console.log("Error: ", error);
       }
     });
 }
 
-var updateBroadcastLayout = function () {
-    http.post('/broadcast/layout', { streams: broadcast.streams })
-      .then(function (result) { console.log(result); })
-      .catch(function (error) { console.log(error); });
-};
+// var updateBroadcastLayout = function () {
+//     $.post(SAMPLE_SERVER_BASE_URL+'/broadcast/layout', { streams: broadcast.streams })
+//       .then(function (result) { console.log(result); })
+//       .catch(function (error) { console.log(error); });
+// };
 
 /**
  * Send the broadcast status to everyone connected to the session using
@@ -41,16 +41,77 @@ var updateBroadcastLayout = function () {
  * @param {String} status
  * @param {Object} [to] - An OpenTok connection object
  */
-var signal = function (session, status, to) {
-    var signalData = Object.assign({}, { type: 'broadcast', data: status }, to ? { to } : {});
-    session.signal(signalData, function (error) {
-      if (error) {
-        console.log(['signal error (', error.code, '): ', error.message].join(''));
-      } else {
-        console.log('signal sent');
-      }
-    });
-};
+// var signal = function (session, status, to) {
+//     var signalData = Object.assign({}, { type: 'broadcast', data: status }, to ? { to } : {});
+//     session.signal(signalData, function (error) {
+//       if (error) {
+//         console.log(['signal error (', error.code, '): ', error.message].join(''));
+//       } else {
+//         console.log('signal sent');
+//       }
+//     });
+// };
+
+// var validRtmp = function () {
+//     var server = document.getElementById('rtmpServer');
+//     var stream = document.getElementById('rtmpStream');
+
+//     var serverDefined = !!server.value;
+//     var streamDefined = !!stream.value;
+//     var invalidServerMessage = 'The RTMP server url is invalid. Please update the value and try again.';
+//     var invalidStreamMessage = 'The RTMP stream name must be defined. Please update the value and try again.';
+
+//     if (serverDefined && !server.checkValidity()) {
+//       document.getElementById('rtmpLabel').classList.add('hidden');
+//       document.getElementById('rtmpError').innerHTML = invalidServerMessage;
+//       document.getElementById('rtmpError').classList.remove('hidden');
+//       return null;
+//     }
+
+//     if (serverDefined && !streamDefined) {
+//       document.getElementById('rtmpLabel').classList.add('hidden');
+//       document.getElementById('rtmpError').innerHTML = invalidStreamMessage;
+//       document.getElementById('rtmpError').classList.remove('hidden');
+//       return null;
+//     }
+
+//     document.getElementById('rtmpLabel').classList.remove('hidden');
+//     document.getElementById('rtmpError').classList.add('hidden');
+//     return { serverUrl: server.value, streamName: stream.value };
+// };
+
+// var hideRtmpInput = function () {
+//     ['rtmpLabel', 'rtmpError', 'rtmpServer', 'rtmpStream'].forEach(function (id) {
+//       document.getElementById(id).classList.add('hidden');
+//     });
+// };
+
+/**
+ * Make a request to the server to start the broadcast
+ * @param {String} sessionId
+ */
+// var startBroadcast = function (session) {
+
+//     // analytics.log('startBroadcast', 'variationAttempt');
+
+//     var rtmp = validRtmp();
+//     if (!rtmp) {
+//       analytics.log('startBroadcast', 'variationError');
+//       return;
+//     }
+
+//     hideRtmpInput();
+//     $.post(SAMPLE_SERVER_BASE_URL+'/broadcast/start', { sessionId: session.sessionId, streams: broadcast.streams, rtmp: rtmp })
+//       .then(function (broadcastData) {
+//         broadcast = R.merge(broadcast, broadcastData);
+//         updateStatus(session, 'active');
+//         // analytics.log('startBroadcast', 'variationSuccess');
+//       }).catch(function (error) {
+//         console.log(error);
+//         // analytics.log('startBroadcast', 'variationError');
+//       });
+// };
+
 
 /**
  * Listen for events on the OpenTok session
@@ -61,8 +122,16 @@ var setEscucharEventos = function(session, publisher){
     let subscribers = [];
     let broadcastActive = false;
 
-    // console.log("setEscucharEventos");
-    // console.log(session);
+    // Add click handler to the start/stop button
+    var startStopButton = document.getElementById('startStop');
+    startStopButton.classList.remove('hidden');
+    startStopButton.addEventListener('click', function () {
+        if (broadcast.status === 'waiting') {
+            startBroadcast(session);
+        } else if (broadcast.status === 'active') {
+            endBroadcast(session);
+        }
+    });
     
     // Subscribe to new streams as they're published
     session.on('streamCreated', function (event) {
@@ -133,7 +202,47 @@ var setEscucharEventos = function(session, publisher){
         msgHistory.appendChild(li);
         li.scrollIntoView();
     });
+
+    // Signal the status of the broadcast when requested
+    session.on('signal:broadcast', function (event) {
+        if (event.data === 'status') {
+            signal(session, broadcast.status, event.from);
+        }
+    });
+
+    // document.getElementById('copyURL').addEventListener('click', function () {
+    //     showCopiedNotice();
+    // });
+  
+    document.getElementById('publishVideo').addEventListener('click', function () {
+        toggleMedia(publisher, this);
+    });
+  
+    document.getElementById('publishAudio').addEventListener('click', function () {
+        toggleMedia(publisher, this);
+    });
+
 }
+
+// Let the user know that the url has been copied to the clipboard
+var showCopiedNotice = function () {
+    var notice = document.getElementById('copyNotice');
+    notice.classList.remove('opacity-0');
+    setTimeout(function () {
+      notice.classList.add('opacity-0');
+    }, 1500);
+};
+/**
+ * Toggle publishing audio/video to allow host to mute
+ * their video (publishVideo) or audio (publishAudio)
+ * @param {Object} publisher The OpenTok publisher object
+ * @param {Object} el The DOM element of the control whose id corresponds to the action
+ */
+var toggleMedia = function (publisher, el) {
+    var enabled = el.classList.contains('disabled');
+    el.classList.toggle('disabled');
+    publisher[el.id](enabled);
+};
 
 var setEscucharSeñales = function(session){
 
@@ -177,7 +286,7 @@ var setEscucharSeñales = function(session){
 var initPublisher = function(username){
     console.log("init Publisher");
     let properties = Object.assign({ name: username, insertMode: 'append' }, insertOptions);
-    return OT.initPublisher('div-publisher', properties);
+    return OT.initPublisher('div-subscriber', properties);
 }
 
 var getCredenciales = function(){
@@ -220,6 +329,51 @@ var setTokenFire = function(sessionData){
       });
  }
 
+var onStartGrabacion = function(){
+    let nombreGrabacion = $("#nombre_session").text();
+    let sessionData = JSON.parse(localStorage.getItem("datosSession"));
+    
+    var data = {
+        hasAudio: true,
+        hasVideo: true,
+        outputMode: "composed",
+        sessionId: sessionData.session_id,
+        nameGravacion: nombreGrabacion
+    }
+
+    $.ajax({
+        url: SAMPLE_SERVER_BASE_URL + "/start-client",
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify(data),
+        complete: function(){
+            console.log("onStartGrabacion() complete");
+        },
+        success: function(){
+            console.log("onStartGrabacion() successfully");
+        },
+        error: function(err){
+            console.log(err);
+            console.log("onStartGrabacion() error");
+        }
+    });
+    $("#start").hide();
+    $("#stop").show();
+}
+
+var onStopGrabacion = function(){
+    $.post(SAMPLE_SERVER_BASE_URL + "/stop-client/" + archiveId);
+    console.log("Se paro con exito")
+    $("#stop").hide();
+    $("#view").prop("disabled", false);
+    $("#stop").show();
+}
+
+var onViewGrabacion = function(){
+    $("#view").prop("disabled", true);
+    window.location = SAMPLE_SERVER_BASE_URL + /archive/ + archiveId + "/view";
+}
+
 var setSessionData = function(sessionData){
     localStorage.setItem("datosSession", JSON.stringify(sessionData));
 }
@@ -245,11 +399,11 @@ var addPublisherControls = function (publisher) {
 };
 
 var init = function(){
+    // var clipboard = new Clipboard('#copyURL'); // eslint-disable-line no-unused-vars
     firebase.initializeApp(FIREBASE_CONFIG);
     let credenciales = getCredenciales();
     let props = { connectionEventsSuppressed: true };
     let session = OT.initSession(credenciales.api_key, credenciales.session_id, props);
-
     let publisher = initPublisher(credenciales.username);
 
     session.connect(credenciales.token, function (error) {
@@ -288,5 +442,4 @@ $(".tabs ul").on("click", "li", function(){
     $(this).addClass("is-active");
     $(".content-tabs>.content-tab").removeClass("is-active");
     $("#" + ContentId).addClass("is-active");
-
-})
+});

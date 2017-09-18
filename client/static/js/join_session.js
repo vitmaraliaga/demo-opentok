@@ -24,7 +24,7 @@ var insertOptions = {
  */
 var initPublisher = function () {
     // var properties = Object.assign({ name: 'Guest', insertMode: 'after' }, insertOptions);
-    var properties = Object.assign({ name: 'Guest', insertMode: 'append' }, insertOptions);
+    var properties = Object.assign({ name: 'Me', insertMode: 'append' }, insertOptions);
     return OT.initPublisher('div-publisher', properties);
 };
 
@@ -148,14 +148,16 @@ var publishAndSubscribe = function (session, publisher) {
 };
 
 /**
- * Subscribe to a stream
+ * Subscribe to a stream.
  */
 var subscribe = function (session, stream) {
     var name = stream.name;
-    console.log("subscribe :" + name)
-    var insertMode = name === 'Host' ? 'before' : 'after';
-    var properties = Object.assign({ name: name, insertMode: insertMode }, insertOptions);
-    session.subscribe(stream, 'div-subscriber', properties, function (error) {
+    var divContentId = name === '@vitmaraliaga' ? 'div-subscriber' : 'div-publisher';
+    console.log("subscribe :" + name); 
+    // var insertMode = name === 'Host' ? 'before' : 'after';
+    // var insertMode = name === 'Host' ? 'before' : 'after';
+    var properties = Object.assign({ name: name, insertMode: 'append' }, insertOptions);
+    session.subscribe(stream, divContentId, properties, function (error) {
       if (error) {
         console.log(error);
       }

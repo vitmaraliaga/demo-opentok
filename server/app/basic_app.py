@@ -15,8 +15,8 @@ from config.config_env import api_key, api_secret
 # print(ReadJson())
 
 
-# opentok = OpenTok(api_key, api_secret)
-# session = opentok.create_session(media_mode=MediaModes.routed)
+#opentok = OpenTok(api_key, api_secret)
+#session = opentok.create_session(media_mode=MediaModes.routed)
 
 
 @app.template_filter ('datefmt')
@@ -29,6 +29,8 @@ def index():
 
 @app.route('/host')
 def host():
+    # opentok = OpenTok(api_key, api_secret)
+    # session = opentok.create_session(media_mode=MediaModes.routed)
     key = api_key
     session_id = session.session_id
     token = opentok.generate_token(session_id)
@@ -58,7 +60,7 @@ def download(archive_id):
     return redirect(archive.url)
 
 @app.route('/start', methods=['POST'])
-def start():
+def start(session_id):
     has_audio = 'hasAudio' in request.form.keys()
     has_video = 'hasVideo' in request.form.keys()
     output_mode = OutputModes[request.form.get('outputMode')]

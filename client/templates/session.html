@@ -85,9 +85,21 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <br>
                                 <label class="label" id="nombre_session"> <strong>Video de asesoria por el dia 2.</strong> </label>
+                                <div class="field is-horizontal">
+                                    <div class="rtmp-container">
+                                        <span id="rtmpLabel">¿Quieres transmitirte a YouTube Live o Facebook Live? Agregue la URL del servidor RTMP y el nombre de la secuencia:</span>
+                                        <span class="hidden error" id="rtmpError">El nombre RTMP y / o el nombre de secuencia no son válidos. Compruebe la URL y vuelva a intentarlo. </span>
+                                        <span id="rtmpActive" class="hidden active">¡Su flujo RTMP está activo!</span>
+                                        <div id="rtmpInputContainer" class="input-container" >
+                                            <input id="rtmpServer" type="url" placeholder="rtmp://myrtmpserver/mybroadcastapp">
+                                            <input id="rtmpStream" type="text" placeholder="myStreamName">
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="button" class="button is-success" id="startStop" >Broadcast</button>
+
                             </p>
                         </div>
                     </div>
@@ -195,6 +207,9 @@
         </div>
     </div>
     
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/1.0.0/fetch.min.js" type="text/javascript" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.10/clipboard.min.js"></script>
+
     <script type="text/javascript" src="./../static/js/config.js"></script>
     <script type="text/javascript" src="./../static/js/session.js"></script>
 </body>

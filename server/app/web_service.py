@@ -110,8 +110,7 @@ def start_lient():
     session_id = request.json['sessionId']
     name_gravacion = request.json['nameGravacion']
 
-    archive = opentok.start_archive(session_id, name=name_gravacion, 
-                has_audio=has_audio, has_video=has_video, output_mode=output_mode)
+    archive = opentok.start_archive(session_id, name=name_gravacion, has_audio=has_audio, has_video=has_video, output_mode=output_mode)
     return jsonify(archive.json())
 
 @app.route('/archive/<archive_id>/view')
