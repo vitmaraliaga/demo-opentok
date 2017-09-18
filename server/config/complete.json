@@ -1,0 +1,14 @@
+{
+    "OpenTox": {
+        "apiKey" : "45951002",
+        "apiSecret": "7fbfff187da7b0afe0b306df4dbdc9d61612de27"
+    },
+    "Firebase": {
+        "apiKey" : "AIzaSyBdN8m1FPdfydOMeNELMajAtkPPmyjTU7E",
+        "authDomain": "opentok-proesad.firebaseapp.com",
+        "databaseURL": "https://opentok-proesad.firebaseio.com",
+        "projectId": "opentok-proesad",
+        "storageBucket": "",
+        "messagingSenderId": "315761079241"
+    }
+}

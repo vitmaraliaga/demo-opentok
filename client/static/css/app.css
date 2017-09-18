@@ -70,8 +70,8 @@ body, html {
 
 #div-publisher {
     position: absolute;
-    width: 360px;
-    height: 240px;
+    width: 310px;
+    height: 190px;
     bottom: 10px;
     left: 10px;
     z-index: 100;

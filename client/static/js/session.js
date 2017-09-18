@@ -92,11 +92,80 @@ var setEscucharEventos = function(session, publisher){
         }      
     });
     session.on('signal:broadcast', function (event) {
+        console.log("Hola de broadcast");
+        
         if (event.data === 'status') {
             signal(session, broadcast.status, event.from);
         }
     });
+    session.on('signal:msg', function(event){
+        // recibir un mensage y agregar en el historial.
+        let msgHistory = document.querySelector("#history");
+        let data = event.data;
+            
+        
+        let li = document.createElement("li");
+        li.className = event.from.connectionId === session.connection.connectionId ? 'mine' : 'theirs';
+        let div = document.createElement("div");
+        let div1 = document.createElement("div");
+            
+        // div avatar
+        let img = document.createElement("img");
+        img.src = "http://bulma.io/images/placeholders/128x128.png";
+        let avatar = div1;
+        avatar.className = "avatar";
+        avatar.appendChild(img);
+        
+        // div msg
+        let p = document.createElement("p");
+        p.textContent = data.msgText;
+        let time = document.createElement("time");
+        let hora = document.createTextNode(data.hora);
+        time.appendChild(hora);
+        let msg = div;
+        msg.className = "msg";
+        msg.appendChild(p);
+        msg.appendChild(time);
+    
+        li.appendChild(avatar);
+        li.appendChild(msg);
+            
+        msgHistory.appendChild(li);
+        li.scrollIntoView();
+    });
 }
+
+var setEscucharSeñales = function(session){
+
+    // https://codepen.io/Varo/pen/gbZzgr
+
+    //Text chat
+    var form = document.querySelector("#formChatText");
+    var msgText = document.querySelector("#msgTxt");
+
+    //Enviar una señal una vez que el usuario ingrese datos en el formulario.
+    form.addEventListener("submit", function(event){
+        event.preventDefault();
+    
+        if(msgTxt.value == ""){
+            return;
+        }
+    
+        var Data = {
+            msgText: msgTxt.value,
+            hora: GetCurrentHour()
+        }
+        
+        session.signal({type: 'msg', data: Data }, function(error){
+            if (error){
+                console.log("Error enviando la señal: ", error.name, error.message);
+            }else {
+                msgText.value = "";
+            }
+        })
+    });
+}
+
 
 // var checkBroadcastStatus = function(session){
     
@@ -123,13 +192,15 @@ var getCredenciales = function(){
         //console.log("Crear nuevo token, es una nueva persona.")
         //CrearToken
         $.ajax({
-            url: SAMPLE_SERVER_BASE_URL+'/session/'+session_data.session_id+'/token',
+            url: SAMPLE_SERVER_BASE_URL+'/session/'+session_data.session_id+'/token-host',
             async: false
         }).done(function(data){
+
             session_data.token=data.token;
             session_data.username=data.username;
-            localStorage.setItem("datosSession", JSON.stringify(session_data));      
-        })
+            setSessionData(session_data);  
+            setTokenFire(session_data);
+        });
     }
 
     $("#nombre_session").text(session_data.session_name);
@@ -138,10 +209,26 @@ var getCredenciales = function(){
     return session_data;
 }
 
+var setTokenFire = function(sessionData){
+    
+     let db = firebase.database();
+     var tokens = db.ref("tokens");
+     return tokens.push({
+        token: sessionData.token,
+        username: sessionData.username,
+        session_id: sessionData.session_id
+      });
+ }
+
+var setSessionData = function(sessionData){
+    localStorage.setItem("datosSession", JSON.stringify(sessionData));
+}
+
 var setPublicarYSuscribir = function(session, publisher){
     session.publish(publisher);
     addPublisherControls(publisher);
     setEscucharEventos(session, publisher);
+    setEscucharSeñales(session);
 }
 
 var addPublisherControls = function (publisher) {
@@ -158,13 +245,12 @@ var addPublisherControls = function (publisher) {
 };
 
 var init = function(){
+    firebase.initializeApp(FIREBASE_CONFIG);
     let credenciales = getCredenciales();
     let props = { connectionEventsSuppressed: true };
     let session = OT.initSession(credenciales.api_key, credenciales.session_id, props);
 
     let publisher = initPublisher(credenciales.username);
-
-    // console.log(credenciales);
 
     session.connect(credenciales.token, function (error) {
         if (error) {
@@ -177,6 +263,24 @@ var init = function(){
         }
     });
 }
+
+var AddZero = function (i){
+    if(i < 10){
+        i = "0" + i;
+    }
+    return i;
+}
+// traer la hora actual. de la computadora
+var GetCurrentHour = function (){
+    let date = new Date();
+    let hora = AddZero(date.getHours());
+    let minuto = AddZero(date.getMinutes());
+    let segundo = AddZero(date.getSeconds());
+    return hora + ":" + minuto + ":" + segundo;
+}
+
+
+
 
 $(".tabs ul").on("click", "li", function(){
     var ContentId = $(this).data("content-id");

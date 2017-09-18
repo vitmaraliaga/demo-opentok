@@ -205,7 +205,7 @@ form.addEventListener("submit", function(event){
             msgText.value = "";
         }
     })
-}) 
+});
 
 function onStartGrabacion(){
     let nombreGrabacion = $("#nombre_session").text();
@@ -263,21 +263,6 @@ function handleError(error){
 
 
 
-function AddZero(i){
-    if(i < 10){
-        i = "0" + i;
-    }
-    return i;
-}
-
-// traer la hora actual. de la computadora
-function GetCurrentHour(){
-    let date = new Date();
-    let hora = AddZero(date.getHours());
-    let minuto = AddZero(date.getMinutes());
-    let segundo = AddZero(date.getSeconds());
-    return hora + ":" + minuto + ":" + segundo;
-}
 
 
 

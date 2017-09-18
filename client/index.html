@@ -8,8 +8,6 @@
     <!-- <link rel="stylesheet" href="./static/css/app.css"> -->
     <!-- <link rel="stylesheet" href="./static/css/archiving.css"> -->
     <!-- <script src="https://static.opentok.com/v2/js/opentok.min.js"></script> -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-
     <!--mis css-->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.5.1/css/bulma.min.css">
@@ -76,6 +74,12 @@
                             </span>
                             <span>Unirse a una sessión</span>
                         </a>
+                        <a class="button is-large is-light"  href="#" id="btnViewSession">
+                            <span class="icon is-medium">
+                                <i class="fa fa-github"></i>
+                            </span>
+                            <span>Ver Videoconferencia</span>
+                        </a>
                         <a class="button is-large is-light">
                             <span class="icon is-medium">
                                 <i class="fa fa-github"></i>
@@ -98,6 +102,7 @@
                     <button class="delete" aria-label="close"></button>
                 </header> -->
                 <section class="modal-card-body">
+                    <form id="formIniciarSession">
                         <div class="field has-addons">
                                 <!-- <label class="label is-small">Nombre de la grabación</label> -->
                                 <div class="control is-expanded has-icons-left has-icons-right">
@@ -111,11 +116,13 @@
                                     <!-- <p class="help">El nombre debe contener mas 5 palabras</p> -->
                                 </div>
                                 <div class="control">
-                                    <a class="button is-info" href="#" id="aIniciarSession">
+                                    <a class="button is-info" href="#" type="submit">
                                         Iniciar
                                     </a>
                                 </div>
                         </div>
+                    </form>
+                        
                 </section>
                 <!-- <footer class="modal-card-foot">
                     <button class="button is-success">Save changes</button>
@@ -153,9 +160,9 @@
                                 Unirse
                             </button>
                         </div>
-                        <div class="control">
+                        <!-- <div class="control">
                             <button class="button is-link">Cancel</button>
-                        </div>
+                        </div> -->
                     </div>
                 </form>
             </section>
@@ -163,9 +170,44 @@
     </div>
     <button class="modal-close is-large" aria-label="close" id="btnCloseJoinSession"></button>
 </div>
+
+<!-- modal for join -->
+<div class="modal" id="modalViewSession">
+        <div class="modal-background" id="backgroundViewSession"></div>
+        <div class="modal-content">
+        <div class="modal-card">
+            <section class="modal-card-body">
+                <form id="formViewSession">
+
+                    <div class="field">
+                        <label class="label">Sesion_ID:</label>
+                        <div class="control">
+                            <input class="input" name="session_id" type="text" placeholder="Ingrese le id de la sesion de la sesión">
+                        </div>
+                    </div>
+                    <div class="field is-grouped">
+                        <div class="control">
+                            <button class="button is-primary" type="submit">
+                                Unirse
+                            </button>
+                        </div>
+                        <!-- <div class="control">
+                            <button class="button is-link">Cancel</button>
+                        </div> -->
+                    </div>
+                </form>
+            </section>
+        </div>                        
+    </div>
+    <button class="modal-close is-large" aria-label="close" id="btnCloseViewSession"></button>
+</div>
     
-    <script type="text/javascript" src="./static/js/config.js"></script>
-    <script type="text/javascript" src="./static/js/index.js"></script>
-    <!-- <script type="text/javascript" src="./js/app.js"></script> -->
+<script src="https://www.gstatic.com/firebasejs/4.3.1/firebase.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+<script type="text/javascript" src="./static/js/config.js"></script>
+<script type="text/javascript" src="./static/js/index.js"></script>
+<!-- <script type="text/javascript" src="./js/app.js"></script> -->
+
 </body>
 </html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Demo OpenTok By Proesad.</title>
+    <link rel="stylesheet" href="./../static/css/app.css">
+    <link rel="stylesheet" href="./../static/css/archiving.css">
+    <link rel="stylesheet" href="./../static/css/chat-off.css">
+    <script src="https://static.opentok.com/v2/js/opentok.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.3.1/firebase.js"></script>
+    <!--mis css-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.5.1/css/bulma.min.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <a href="./../index.html" class="navbar-item" >
+                <img src="./../static/img/proesad-opentok.png" alt="Bulma: a modern CSS framework based on Flexbox" width="112" height="28">
+                <!-- <img src="./static/img/proesad-logo.png" alt="Bulma: a modern CSS framework based on Flexbox" width="112" height="28"> -->
+                <!-- <img src="./static/img/logo-proesad.png" alt="Bulma: a modern CSS framework based on Flexbox" width="112" height="28"> -->
+            </a>
+            <a class="navbar-item is-hidden-desktop" href="#" target="_blank">
+                <span class="icon" style="color: #333;">
+                  <i class="fa fa-github"></i>
+                </span>
+            </a>
+            <a class="navbar-item is-hidden-desktop" href="#" target="_blank">
+                <span class="icon" style="color: #55acee;">
+                  <i class="fa fa-twitter"></i>
+                </span>
+            </a>
+            <div class="navbar-burger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        <div class="navbar-menu">
+            <!-- <h1>Mi menú</h1> -->
+        </div>
+    </nav>
+  
+    <!-- <section class="hero is-medium is-light is-bold">
+    </section> -->
+    <div class="content-session">
+
+        <div id="videos" class="session-left">
+            <div id="div-publisher"></div>
+            <div id="div-subscriber"></div>
+            <div id="buttonholder">
+                <div id="buttons">
+                    <button type="button" class="button is-danger" id="start" onClick="javascript:onStartGrabacion()">Iniciar Grabación</button>
+                    <button type="button" class="button is-success" id="stop" onClick="javascript:onStopGrabacion()">Parar Grabación</button>
+                    <button type="button" class="button is-info" id="view" onClick="javascript:onViewGrabacion()" disabled>Ver Grabación</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="ayudas" class="session-rigth">
+            <div class="content-tabs">
+                <div class="content-tab" id="div-documentos" >
+                </div>
+                <div class="content-tab" id="div-videos" >
+                    <h1>Content Chat</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script type="text/javascript" src="./../static/js/config.js"></script>
+    <script type="text/javascript" src="./../static/js/viewer_session.js"></script>
+</body>
+</html>

@@ -12,6 +12,7 @@ cors = CORS(app)
 
 opentok = OpenTok(api_key, api_secret)
 
+
 @app.route('/session', methods=['POST'])
 def create_session():
 
@@ -27,6 +28,15 @@ def create_session():
     # )
 
     # session_name = request.jskon['session_name']
+    """
+    db = firebase.database()
+    data = {
+        "api_key": api_key,
+        "session_id": session_id,
+        "session_name": session_name
+    }
+    db.child("sessions").push(data)
+    """
 
     return jsonify(
         api_key = api_key,
@@ -34,14 +44,42 @@ def create_session():
         session_name = session_name
     )
 
-@app.route('/session/<session_id>/token')
-def create_token(session_id):
-    token =  opentok.generate_token(session_id)
+@app.route('/session/<session_id>/token-host')
+def create_token_host(session_id):
+    metaData = "username=Host"
+    token =  opentok.generate_token(session_id, Roles.moderator, None, metaData)
     username = "@vitmaraliaga"
 
     return jsonify(
         api_key = api_key,
         
+        session_id = session_id,
+        token = token,
+        username = username
+    )
+
+@app.route('/session/<session_id>/token-guest')
+def create_token_guest(session_id):
+    metaData = "username=Guest"
+    token =  opentok.generate_token(session_id, Roles.publisher, None , metaData)
+    username = "@guest"
+
+    return jsonify(
+        api_key = api_key,
+        
+        session_id = session_id,
+        token = token,
+        username = username
+    )
+
+@app.route('/session/<session_id>/token-viewer')
+def create_token_viewer(session_id):
+    metaData = "username=Viewer"
+    token =  opentok.generate_token(session_id, Roles.subscriber, None , metaData)
+    username = "@viewer"
+
+    return jsonify(
+        api_key = api_key,
         session_id = session_id,
         token = token,
         username = username

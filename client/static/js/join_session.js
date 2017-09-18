@@ -16,15 +16,16 @@ function initializeSession(){
 var insertOptions = {
     width: '100%',
     height: '100%',
-    showControls: false
+    showControls: true
 };
 
 /**
  * Create an OpenTok publisher object
  */
 var initPublisher = function () {
-    var properties = Object.assign({ name: 'Guest', insertMode: 'after' }, insertOptions);
-    return OT.initPublisher('hostDivider', properties);
+    // var properties = Object.assign({ name: 'Guest', insertMode: 'after' }, insertOptions);
+    var properties = Object.assign({ name: 'Guest', insertMode: 'append' }, insertOptions);
+    return OT.initPublisher('div-publisher', properties);
 };
 
 
@@ -57,13 +58,13 @@ var getCredentials = function () {
         //console.log("Crear nuevo token, es una nueva persona.")
         //CrearToken
         $.ajax({
-            url: SAMPLE_SERVER_BASE_URL+'/session/'+session_data.session_id+'/token',
+            url: SAMPLE_SERVER_BASE_URL+'/session/'+session_data.session_id+'/token-guest',
             async: false
         }).done(function(data){
             session_data.token=data.token;
             session_data.username=data.username;
             localStorage.setItem("datosSession", JSON.stringify(session_data));      
-        })
+        });
     }
 
     $("#nombre_session").text(session_data.session_name);
@@ -81,7 +82,7 @@ var getCredentials = function () {
 var publishAndSubscribe = function (session, publisher) {
     
     var streams = 1;
-    
+    console.log("hi")
     session.publish(publisher);
     // addPublisherControls(publisher);
     
@@ -100,7 +101,42 @@ var publishAndSubscribe = function (session, publisher) {
             document.getElementById('videoContainer').classList.remove('wrap');
         }
     });
+    session.on('signal:msg', function(event){
+        // recibir un mensage y agregar en el historial.
+        let msgHistory = document.querySelector("#history");
+        let data = event.data;
+        
+        let li = document.createElement("li");
+        li.className = event.from.connectionId === session.connection.connectionId ? 'mine' : 'theirs';
+        let div = document.createElement("div");
+        let div1 = document.createElement("div");
+            
+        // div avatar
+        let img = document.createElement("img");
+        img.src = "http://bulma.io/images/placeholders/128x128.png";
+        let avatar = div1;
+        avatar.className = "avatar";
+        avatar.appendChild(img);
+        
+        // div msg
+        let p = document.createElement("p");
+        p.textContent = data.msgText;
+        let time = document.createElement("time");
+        let hora = document.createTextNode(data.hora);
+        time.appendChild(hora);
+        let msg = div;
+        msg.className = "msg";
+        msg.appendChild(p);
+        msg.appendChild(time);
+
+        li.appendChild(avatar);
+        li.appendChild(msg);
+            
+        msgHistory.appendChild(li);
+        li.scrollIntoView();
+    });
     
+
     // document.getElementById('publishVideo').addEventListener('click', function () {
     //     toggleMedia(publisher, this);
     // });
@@ -111,12 +147,59 @@ var publishAndSubscribe = function (session, publisher) {
     
 };
 
+/**
+ * Subscribe to a stream
+ */
+var subscribe = function (session, stream) {
+    var name = stream.name;
+    console.log("subscribe :" + name)
+    var insertMode = name === 'Host' ? 'before' : 'after';
+    var properties = Object.assign({ name: name, insertMode: insertMode }, insertOptions);
+    session.subscribe(stream, 'div-subscriber', properties, function (error) {
+      if (error) {
+        console.log(error);
+      }
+    });
+};
+
+
+var setListenSignals = function(session){
+    
+    // https://codepen.io/Varo/pen/gbZzgr
+    //Text chat
+    var form = document.querySelector("#formChatText");
+    var msgText = document.querySelector("#msgTxt");
+    
+    //Enviar una señal una vez que el usuario ingrese datos en el formulario.
+    form.addEventListener("submit", function(event){
+        event.preventDefault();
+        if(msgTxt.value == ""){
+            return;
+        }
+        
+        var Data = {
+            msgText: msgTxt.value,
+            hora: GetCurrentHour()
+        }
+        
+        session.signal({type: 'msg', data: Data }, function(error){
+            if (error){
+                console.log("Error enviando la señal: ", error.name, error.message);
+            }else {
+                msgText.value = "";
+            }
+        })
+    });
+}
+    
 
 var init = function(){
-
+    if(!validateSupportWebRTC()){return false;}
+    console.log("init")
     let credentials = getCredentials();
     let props = { connectionEventsSuppressed: true };
-    let session = OT.initSession(credentials.apiKey, credentials.sessionId, props);
+    console.log(credentials);
+    let session = OT.initSession(credentials.api_key, credentials.session_id, props);
     let publisher = initPublisher();
 
     session.connect(credentials.token, function (error) {
@@ -127,11 +210,27 @@ var init = function(){
         // analytics.log('initialize', 'variationError');
       } else {
         publishAndSubscribe(session, publisher);
+        setListenSignals(session);
         // analytics.init(session);
         // analytics.log('initialize', 'variationAttempt');
         // analytics.log('initialize', 'variationSuccess');
       }
     });
+}
+
+var AddZero = function (i){
+    if(i < 10){
+        i = "0" + i;
+    }
+    return i;
+}
+// traer la hora actual. de la computadora
+var GetCurrentHour = function (){
+    let date = new Date();
+    let hora = AddZero(date.getHours());
+    let minuto = AddZero(date.getMinutes());
+    let segundo = AddZero(date.getSeconds());
+    return hora + ":" + minuto + ":" + segundo;
 }
 
 $(".tabs ul").on("click", "li", function(){
@@ -140,5 +239,4 @@ $(".tabs ul").on("click", "li", function(){
     $(this).addClass("is-active");
     $(".content-tabs>.content-tab").removeClass("is-active");
     $("#" + ContentId).addClass("is-active");
-
-})
+});

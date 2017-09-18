@@ -14,3 +14,13 @@ var API_SECRET = '7fbfff187da7b0afe0b306df4dbdc9d61612de27';
 var SESSION_ID = '1_MX40NTk1MTAwMn5-MTUwNDU1MzM3NDc5N35rWFhyQ0JocVdXMnphdWc4SzZERlI0Tit-fg';
 var TOKEN = 'T1==cGFydG5lcl9pZD00NTk1MTAwMiZzaWc9ZjVmNDZkZWMzMDY4ODMxMDJlNDVjMzc1MGYwMjQ2Nzc1YjAwMjU5OTpzZXNzaW9uX2lkPTFfTVg0ME5UazFNVEF3TW41LU1UVXdORFUxTXpNM05EYzVOMzVyV0ZoeVEwSm9jVmRYTW5waGRXYzRTelpFUmxJMFRpdC1mZyZjcmVhdGVfdGltZT0xNTA0NTUzNDAxJm5vbmNlPTAuOTgzNzMwODEzNDYyOTc1OSZyb2xlPXB1Ymxpc2hlciZleHBpcmVfdGltZT0xNTA0NTU3MDAxJmluaXRpYWxfbGF5b3V0X2NsYXNzX2xpc3Q9';
 
+
+// Initialize Firebase
+var FIREBASE_CONFIG = {
+    apiKey: "AIzaSyBdN8m1FPdfydOMeNELMajAtkPPmyjTU7E",
+    authDomain: "opentok-proesad.firebaseapp.com",
+    databaseURL: "https://opentok-proesad.firebaseio.com",
+    projectId: "opentok-proesad",
+    storageBucket: "opentok-proesad.appspot.com",
+    messagingSenderId: "315761079241"
+};
